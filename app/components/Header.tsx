@@ -2,12 +2,12 @@ import Link from 'next/link';
 
 const Header: React.FC = () => {
   return (
-    <header className="flex justify-between items-center p-5 bg-[#050325] text-white">
+    <header className="flex justify-between items-center p-10 bg-[#050325] text-white">
       <div className="text-xl font-bold">
-        <Link href="/">Moodiverse</Link>
+        <Link className="font-bold" href="/">MOODIVERSE</Link>
       </div>
       <nav>
-        <ul className="flex space-x-4">
+        <ul className="flex space-x-10">
           <li>
             <Link href="/">Home</Link>
           </li>
