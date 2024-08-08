@@ -7,7 +7,7 @@ export const GET = async () => {
 
     return new NextResponse(
       JSON.stringify({
-        message: "Logout SuccessFull!",
+        message: "Logout Successful!",
       }),
       {
         status: 200,
