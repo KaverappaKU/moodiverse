@@ -30,7 +30,7 @@ const Register: React.FC = () => {
       setError("Password should be at least 8 characters long or Invalid Password");
       return;
     }
-
+    
     try{
       const res = await fetch("/api/register", {
         method: "POST",
@@ -39,6 +39,7 @@ const Register: React.FC = () => {
         },
         body: JSON.stringify({ fullname, email, password })
       })
+      
       if (res.status === 400){
         setError("This email already exists");
       }

@@ -1,13 +1,15 @@
 import { timeStamp } from "console";
-import {Schema, model, models} from "mongoose";
+import { Schema, model, models } from "mongoose";
 
-const userSchema = new Schema({
-    fullname: {type: String, required: true, unique: true},
-    email: {type: String, required: true, unique: true},
-    password: {type: String, required: true}
-},
-{timestamps: true})
+const userSchema = new Schema(
+  {
+    fullname: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+  },
+  { timestamps: true }
+);
 
-const User = models.User || model("User", userSchema)
+const User = models.User || model("User", userSchema);
 
 export default User;

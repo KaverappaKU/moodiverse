@@ -1,12 +1,20 @@
 "use client"
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { useRouter } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from'react';
 
 const SelectMood: React.FC = () => {
   const router = useRouter();
-  const { searchParams } = new URL(window.location.href);
+  const searchParams = useSearchParams();
   const category = searchParams.get('category');
+  const [currentCategory, setCurrentCategory] = useState<string | string[] | undefined>(undefined);
+
+  useEffect(() => {
+    if (category) {
+      setCurrentCategory(category);
+    }
+  }, [category]);
 
   const handleMoodClick = (mood: string) => {
     router.push(`/recommendations?category=${category}&mood=${mood}`);

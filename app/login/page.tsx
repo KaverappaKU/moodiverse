@@ -1,56 +1,50 @@
-"use client"
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import Link from 'next/link';
-import {useRouter} from 'next/navigation';
-import React ,{ useEffect, useState } from 'react';
-import { signIn, useSession } from 'next-auth/react';
+"use client";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { signIn, useSession } from "next-auth/react";
+import axios from "axios";
 
 const Login: React.FC = () => {
   const router = useRouter();
   const [error, setError] = useState("");
-  const session = useSession();
-
-  useEffect(() => {
-    if (session?.status === "authenticated") {
-      router.replace("/");
-    }
-  }, [session, router]);
 
   const isValidEmail = (email: string) => {
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
     return emailRegex.test(email);
   };
-  
-  const handleSubmit = async ( e: any) => {
-    e.preventDefault(); 
-    const email = e.target[1].value;
-    const password = e.target[2].value;
 
-    if (!isValidEmail(email)){
-      setError("Invalid email")
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    const email = e.target[0].value;
+    const password = e.target[1].value;
+
+    if (!isValidEmail(email)) {
+      setError("Invalid email");
       return;
     }
 
-    if (!password || password.length < 8){
-      setError("Password should be at least 8 characters long or Invalid Password");
+    if (!password || password.length < 8) {
+      setError(
+        "Password should be at least 8 characters long or Invalid Password"
+      );
       return;
     }
 
-    const res = await signIn("credentials", {
-      redirect: false,
+    const { data } = await axios.post("/api/login", {
       email,
       password,
-    })
-
-    if (res?.error) {
+    });
+    localStorage.setItem("userData", JSON.stringify(data?.data));
+    if (!data) {
       setError("Invalid User or Password");
-      if (res?.url) router.replace("/")
-    }else{
-   setError("")
-  }
-
-  }
+    } else {
+      setError("");
+      router.push("/");
+    }
+  };
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -60,7 +54,10 @@ const Login: React.FC = () => {
         <div className="w-full max-w-sm p-8 bg-gray-800 rounded-lg shadow-md">
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="block text-white text-sm font-bold mb-2" htmlFor="email">
+              <label
+                className="block text-white text-sm font-bold mb-2"
+                htmlFor="email"
+              >
                 Email
               </label>
               <input
@@ -71,7 +68,10 @@ const Login: React.FC = () => {
               />
             </div>
             <div className="mb-6">
-              <label className="block text-white text-sm font-bold mb-2" htmlFor="password">
+              <label
+                className="block text-white text-sm font-bold mb-2"
+                htmlFor="password"
+              >
                 Password
               </label>
               <input
@@ -88,6 +88,11 @@ const Login: React.FC = () => {
               >
                 Login
               </button>
+              <div>
+                <p className="text-red-600 text-[16px] mt-4">
+                  {error && error}
+                </p>
+              </div>
               <Link href="/register">
                 <button
                   className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
@@ -106,4 +111,3 @@ const Login: React.FC = () => {
 };
 
 export default Login;
-
