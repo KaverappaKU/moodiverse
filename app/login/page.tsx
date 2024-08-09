@@ -67,7 +67,7 @@ const Login: React.FC = () => {
                 placeholder="Enter your Email"
               />
             </div>
-            <div className="mb-6">
+            {/* <div className="mb-6">
               <label
                 className="block text-white text-sm font-bold mb-2"
                 htmlFor="password"
@@ -80,7 +80,53 @@ const Login: React.FC = () => {
                 type="password"
                 placeholder="******************"
               />
+            </div> */}
+            <div className="mb-6">
+              <label
+                className="block text-white text-sm font-bold mb-2"
+                htmlFor="password"
+              >
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-black mb-3 leading-tight focus:outline-none focus:shadow-outline"
+                  id="password"
+                  type="password"
+                  placeholder="******************"
+                />
+                <span
+                  onClick={() => {
+                    const passwordField = document.getElementById("password");
+                    passwordField.type =
+                      passwordField.type === "password" ? "text" : "password";
+                  }}
+                  className="absolute inset-y-0 right-3 flex items-center cursor-pointer"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    className="w-5 h-5 text-gray-500"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
+                  </svg>
+                </span>
+              </div>
             </div>
+
             <div className="flex items-center justify-between">
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

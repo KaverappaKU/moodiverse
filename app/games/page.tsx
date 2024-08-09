@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const Games = () => {
   const [games, setGames] = useState<any[]>([]);
@@ -12,10 +12,10 @@ const Games = () => {
   useEffect(() => {
     const fetchGames = async () => {
       try {
-        const response = await axios.get('/api/games');
+        const response = await axios.get("/api/games");
         setGames(response.data);
       } catch (error) {
-        console.error('Error fetching games:', error);
+        console.error("Error fetching games:", error);
       }
     };
 
@@ -33,7 +33,7 @@ const Games = () => {
   return (
     <>
       <Header />
-      <main className="m-5 min-h-screen">
+      <main className="p-5 min-h-screen bg-[#050325]">
         <h1 className="text-3xl font-bold mb-4">Popular Games</h1>
         <div className="flex flex-wrap">
           {games.map((game) => (
@@ -61,13 +61,11 @@ const Games = () => {
               <button className="mb-4 text-red-500" onClick={handleClose}>
                 Close
               </button>
-              <h2 className="text-2xl font-bold mb-2">{selectedGame.name}</h2>
               <img
                 src={selectedGame.background_image}
                 alt={selectedGame.name}
                 className="w-full rounded-lg mb-4"
               />
-              <p className="text-gray-700">{selectedGame.developers}</p>
             </div>
           </div>
         )}

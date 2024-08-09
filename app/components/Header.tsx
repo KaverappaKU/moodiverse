@@ -22,7 +22,7 @@ const Header: React.FC = () => {
   return (
     <header className="flex justify-between items-center p-10 bg-[#050325] text-white">
       <div className="text-xl font-bold">
-        <Link className="font-bold" href="/">
+        <Link className="font-bold text-[#FFCC00]" href="/">
           MOODIVERSE
         </Link>
       </div>
