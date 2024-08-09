@@ -67,20 +67,6 @@ const Login: React.FC = () => {
                 placeholder="Enter your Email"
               />
             </div>
-            {/* <div className="mb-6">
-              <label
-                className="block text-white text-sm font-bold mb-2"
-                htmlFor="password"
-              >
-                Password
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-black mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                id="password"
-                type="password"
-                placeholder="******************"
-              />
-            </div> */}
             <div className="mb-6">
               <label
                 className="block text-white text-sm font-bold mb-2"
@@ -97,7 +83,9 @@ const Login: React.FC = () => {
                 />
                 <span
                   onClick={() => {
-                    const passwordField = document.getElementById("password");
+                    const passwordField = document.getElementById(
+                      "password"
+                    ) as HTMLInputElement;
                     passwordField.type =
                       passwordField.type === "password" ? "text" : "password";
                   }}
