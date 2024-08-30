@@ -174,6 +174,9 @@ const Recommendations: React.FC = () => {
     <div>
       <Header />
       <main className="flex flex-col items-center justify-center min-h-screen p-2 bg-[#050325]">
+        <h1 className="text-4xl text-white font-bold mb-4">
+          Recommended for you
+        </h1>
         {loading ? (
           <p className="text-gray-500">Loading...</p>
         ) : recommendation ? (

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -33,16 +33,17 @@ const Login: React.FC = () => {
       return;
     }
 
-    const { data } = await axios.post("/api/login", {
-      email,
-      password,
-    });
-    localStorage.setItem("userData", JSON.stringify(data?.data));
-    if (!data) {
-      setError("Invalid User or Password");
-    } else {
+    try {
+      const { data } = await axios.post("/api/login", {
+        email,
+        password,
+      });
+      localStorage.setItem("userData", JSON.stringify(data?.data));
       setError("");
       router.push("/");
+    } catch (err: any) {
+      const { data } = err?.response;
+      setError(data?.message);
     }
   };
   return (
@@ -114,7 +115,9 @@ const Login: React.FC = () => {
                 </span>
               </div>
             </div>
-
+            {error && (
+              <p className="text-red-600 text-[16px] my-4 text-left">{error}</p>
+            )}
             <div className="flex items-center justify-between">
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -122,11 +125,6 @@ const Login: React.FC = () => {
               >
                 Login
               </button>
-              <div>
-                <p className="text-red-600 text-[16px] mt-4">
-                  {error && error}
-                </p>
-              </div>
               <Link href="/register">
                 <button
                   className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"

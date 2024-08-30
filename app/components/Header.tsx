@@ -1,23 +1,43 @@
 "use client";
 import axios from "axios";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const Header: React.FC = () => {
   const [loading, setLoading] = useState(false);
-  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+  const [userData, setUserData] = useState<any>();
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    const data =
+      typeof window !== "undefined" && localStorage.getItem("userData");
+    const jsonData = JSON.parse(data || "{}");
+    setUserData(jsonData);
+  }, []);
 
   const handleLogout = async () => {
     setLoading(true);
     try {
       await axios.get("/api/logout");
       localStorage.removeItem("userData");
+      setIsLoggedIn(false);
+      router.push("/");
     } catch (err) {
       console.log(err);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const userData = localStorage.getItem("userData");
+    console.log(userData);
+    if (!userData) {
+      setIsLoggedIn(false);
+    }
+  }, [userData]);
 
   return (
     <header className="flex justify-between items-center p-10 bg-[#050325] text-white">
@@ -44,13 +64,14 @@ const Header: React.FC = () => {
             <li>Logging you out...</li>
           ) : (
             <li>
-              {userData?.fullname ? (
+              {isLoggedIn ? (
                 <div className="flex items-center gap-4">
-                  <Link href="/myAccount">Welcome {userData?.fullname}!</Link>
-                  {/* <p>Welcome {userData?.fullname}!</p> */}
+                  <Link href="/myAccount">My Account</Link>
+                  {/* <Link href="/myAccount">Welcome {userData?.fullname}!</Link> */}
                   <button
                     className="bg-white text-[#050325] px-4 py-2 rounded"
                     onClick={handleLogout}
+                    disabled={loading}
                   >
                     Logout
                   </button>
