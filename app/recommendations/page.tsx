@@ -1,4 +1,5 @@
 "use client";
+import { Suspense } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useSearchParams } from "next/navigation";
@@ -7,8 +8,8 @@ import axios from "axios";
 
 const Recommendations: React.FC = () => {
   const searchParams = useSearchParams();
-  const category = searchParams.get("category");
-  const mood = searchParams.get("mood");
+  const category = searchParams.get("category") || "";
+  const mood = searchParams.get("mood") || "";
   const [currentCategory, setCurrentCategory] = useState(category);
   const [currentMood, setCurrentMood] = useState(mood);
   const [recommendation, setRecommendation] = useState<any>(null);
@@ -171,72 +172,74 @@ const Recommendations: React.FC = () => {
   };
 
   return (
-    <div>
-      <Header />
-      <main className="flex flex-col items-center justify-center min-h-screen p-2 bg-[#050325]">
-        <h1 className="text-4xl text-white font-bold mb-4">
-          Recommended for you
-        </h1>
-        {loading ? (
-          <p className="text-gray-500">Loading...</p>
-        ) : recommendation ? (
-          <div
-            className={`p-4 bg-white rounded-lg shadow-md ${
-              category === "games"
-                ? "max-w-md"
-                : category === "movies"
-                ? "max-w-custom"
-                : "max-w-custom"
-            }`}
-          >
-            <img
-              src={
+    <Suspense fallback={<div>Loading....</div>}>
+      <div>
+        <Header />
+        <main className="flex flex-col items-center justify-center min-h-screen p-2 bg-[#050325]">
+          <h1 className="text-4xl text-white font-bold mb-4">
+            Recommended for you
+          </h1>
+          {loading ? (
+            <p className="text-gray-500">Loading...</p>
+          ) : recommendation ? (
+            <div
+              className={`p-4 bg-white rounded-lg shadow-md ${
                 category === "games"
-                  ? recommendation.background_image
+                  ? "max-w-md"
+                  : category === "movies"
+                  ? "max-w-custom"
+                  : "max-w-custom"
+              }`}
+            >
+              <img
+                src={
+                  category === "games"
                     ? recommendation.background_image
+                      ? recommendation.background_image
+                      : "/default-image.jpg"
+                    : recommendation.poster_path
+                    ? `https://image.tmdb.org/t/p/w500/${recommendation.poster_path}`
                     : "/default-image.jpg"
-                  : recommendation.poster_path
-                  ? `https://image.tmdb.org/t/p/w500/${recommendation.poster_path}`
-                  : "/default-image.jpg"
+                }
+                alt={
+                  recommendation.title || recommendation.name || "Default Title"
+                }
+                className="w-full h-auto rounded-lg"
+              />
+              <h2 className="mt-4 text-2xl text-black font-semibold text-center">
+                {recommendation.title || recommendation.name}
+              </h2>
+              <p className="mt-2 text-gray-700">
+                {category === "games" ? (
+                  <p>
+                    <div>Ratings: {recommendation.rating}</div>
+                    <div>Metacritic: {recommendation.metacritic}%</div>
+                  </p>
+                ) : recommendation.overview &&
+                  recommendation.overview.length > 100 ? (
+                  recommendation.overview.substring(0, 500) + "..."
+                ) : (
+                  recommendation.overview
+                )}
+              </p>
+            </div>
+          ) : (
+            <p className="text-gray-500">No recommendations available.</p>
+          )}
+          <button
+            onClick={() => {
+              if (currentCategory && currentMood) {
+                fetchRecommendations(currentCategory, currentMood);
               }
-              alt={
-                recommendation.title || recommendation.name || "Default Title"
-              }
-              className="w-full h-auto rounded-lg"
-            />
-            <h2 className="mt-4 text-2xl text-black font-semibold text-center">
-              {recommendation.title || recommendation.name}
-            </h2>
-            <p className="mt-2 text-gray-700">
-              {category === "games" ? (
-                <p>
-                  <div>Ratings: {recommendation.rating}</div>
-                  <div>Metacritic: {recommendation.metacritic}%</div>
-                </p>
-              ) : recommendation.overview &&
-                recommendation.overview.length > 100 ? (
-                recommendation.overview.substring(0, 500) + "..."
-              ) : (
-                recommendation.overview
-              )}
-            </p>
-          </div>
-        ) : (
-          <p className="text-gray-500">No recommendations available.</p>
-        )}
-        <button
-          onClick={() => {
-            if (currentCategory && currentMood) {
-              fetchRecommendations(currentCategory, currentMood);
-            }
-          }}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-        >
-          Refresh Recommendation
-        </button>
-      </main>
-      <Footer />
-    </div>
+            }}
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          >
+            Refresh Recommendation
+          </button>
+        </main>
+        <Footer />
+      </div>
+    </Suspense>
   );
 };
 
