@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 
-export async function GET(response: NextResponse) {
+export async function GET(request: Request) {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_DISCOVER_TMDB_TV_URL}`,
